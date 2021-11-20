@@ -1,8 +1,8 @@
 package com.gachokaerick.eshop.basket.web.rest;
 
-import com.gachokaerick.eshop.basket.domain.BasketCheckout;
 import com.gachokaerick.eshop.basket.repository.BasketCheckoutRepository;
 import com.gachokaerick.eshop.basket.service.BasketCheckoutService;
+import com.gachokaerick.eshop.basket.service.dto.BasketCheckoutDTO;
 import com.gachokaerick.eshop.basket.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -51,18 +51,18 @@ public class BasketCheckoutResource {
     /**
      * {@code POST  /basket-checkouts} : Create a new basketCheckout.
      *
-     * @param basketCheckout the basketCheckout to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new basketCheckout, or with status {@code 400 (Bad Request)} if the basketCheckout has already an ID.
+     * @param basketCheckoutDTO the basketCheckoutDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new basketCheckoutDTO, or with status {@code 400 (Bad Request)} if the basketCheckout has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/basket-checkouts")
-    public ResponseEntity<BasketCheckout> createBasketCheckout(@Valid @RequestBody BasketCheckout basketCheckout)
+    public ResponseEntity<BasketCheckoutDTO> createBasketCheckout(@Valid @RequestBody BasketCheckoutDTO basketCheckoutDTO)
         throws URISyntaxException {
-        log.debug("REST request to save BasketCheckout : {}", basketCheckout);
-        if (basketCheckout.getId() != null) {
+        log.debug("REST request to save BasketCheckout : {}", basketCheckoutDTO);
+        if (basketCheckoutDTO.getId() != null) {
             throw new BadRequestAlertException("A new basketCheckout cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        BasketCheckout result = basketCheckoutService.save(basketCheckout);
+        BasketCheckoutDTO result = basketCheckoutService.save(basketCheckoutDTO);
         return ResponseEntity
             .created(new URI("/api/basket-checkouts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -72,23 +72,23 @@ public class BasketCheckoutResource {
     /**
      * {@code PUT  /basket-checkouts/:id} : Updates an existing basketCheckout.
      *
-     * @param id the id of the basketCheckout to save.
-     * @param basketCheckout the basketCheckout to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated basketCheckout,
-     * or with status {@code 400 (Bad Request)} if the basketCheckout is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the basketCheckout couldn't be updated.
+     * @param id the id of the basketCheckoutDTO to save.
+     * @param basketCheckoutDTO the basketCheckoutDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated basketCheckoutDTO,
+     * or with status {@code 400 (Bad Request)} if the basketCheckoutDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the basketCheckoutDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/basket-checkouts/{id}")
-    public ResponseEntity<BasketCheckout> updateBasketCheckout(
+    public ResponseEntity<BasketCheckoutDTO> updateBasketCheckout(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody BasketCheckout basketCheckout
+        @Valid @RequestBody BasketCheckoutDTO basketCheckoutDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update BasketCheckout : {}, {}", id, basketCheckout);
-        if (basketCheckout.getId() == null) {
+        log.debug("REST request to update BasketCheckout : {}, {}", id, basketCheckoutDTO);
+        if (basketCheckoutDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, basketCheckout.getId())) {
+        if (!Objects.equals(id, basketCheckoutDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -96,34 +96,34 @@ public class BasketCheckoutResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        BasketCheckout result = basketCheckoutService.save(basketCheckout);
+        BasketCheckoutDTO result = basketCheckoutService.save(basketCheckoutDTO);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, basketCheckout.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, basketCheckoutDTO.getId().toString()))
             .body(result);
     }
 
     /**
      * {@code PATCH  /basket-checkouts/:id} : Partial updates given fields of an existing basketCheckout, field will ignore if it is null
      *
-     * @param id the id of the basketCheckout to save.
-     * @param basketCheckout the basketCheckout to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated basketCheckout,
-     * or with status {@code 400 (Bad Request)} if the basketCheckout is not valid,
-     * or with status {@code 404 (Not Found)} if the basketCheckout is not found,
-     * or with status {@code 500 (Internal Server Error)} if the basketCheckout couldn't be updated.
+     * @param id the id of the basketCheckoutDTO to save.
+     * @param basketCheckoutDTO the basketCheckoutDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated basketCheckoutDTO,
+     * or with status {@code 400 (Bad Request)} if the basketCheckoutDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the basketCheckoutDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the basketCheckoutDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/basket-checkouts/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<BasketCheckout> partialUpdateBasketCheckout(
+    public ResponseEntity<BasketCheckoutDTO> partialUpdateBasketCheckout(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody BasketCheckout basketCheckout
+        @NotNull @RequestBody BasketCheckoutDTO basketCheckoutDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update BasketCheckout partially : {}, {}", id, basketCheckout);
-        if (basketCheckout.getId() == null) {
+        log.debug("REST request to partial update BasketCheckout partially : {}, {}", id, basketCheckoutDTO);
+        if (basketCheckoutDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, basketCheckout.getId())) {
+        if (!Objects.equals(id, basketCheckoutDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -131,11 +131,11 @@ public class BasketCheckoutResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<BasketCheckout> result = basketCheckoutService.partialUpdate(basketCheckout);
+        Optional<BasketCheckoutDTO> result = basketCheckoutService.partialUpdate(basketCheckoutDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, basketCheckout.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, basketCheckoutDTO.getId().toString())
         );
     }
 
@@ -146,9 +146,9 @@ public class BasketCheckoutResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of basketCheckouts in body.
      */
     @GetMapping("/basket-checkouts")
-    public ResponseEntity<List<BasketCheckout>> getAllBasketCheckouts(Pageable pageable) {
+    public ResponseEntity<List<BasketCheckoutDTO>> getAllBasketCheckouts(Pageable pageable) {
         log.debug("REST request to get a page of BasketCheckouts");
-        Page<BasketCheckout> page = basketCheckoutService.findAll(pageable);
+        Page<BasketCheckoutDTO> page = basketCheckoutService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -156,20 +156,20 @@ public class BasketCheckoutResource {
     /**
      * {@code GET  /basket-checkouts/:id} : get the "id" basketCheckout.
      *
-     * @param id the id of the basketCheckout to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the basketCheckout, or with status {@code 404 (Not Found)}.
+     * @param id the id of the basketCheckoutDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the basketCheckoutDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/basket-checkouts/{id}")
-    public ResponseEntity<BasketCheckout> getBasketCheckout(@PathVariable Long id) {
+    public ResponseEntity<BasketCheckoutDTO> getBasketCheckout(@PathVariable Long id) {
         log.debug("REST request to get BasketCheckout : {}", id);
-        Optional<BasketCheckout> basketCheckout = basketCheckoutService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(basketCheckout);
+        Optional<BasketCheckoutDTO> basketCheckoutDTO = basketCheckoutService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(basketCheckoutDTO);
     }
 
     /**
      * {@code DELETE  /basket-checkouts/:id} : delete the "id" basketCheckout.
      *
-     * @param id the id of the basketCheckout to delete.
+     * @param id the id of the basketCheckoutDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/basket-checkouts/{id}")

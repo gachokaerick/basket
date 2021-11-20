@@ -2,6 +2,8 @@ package com.gachokaerick.eshop.basket.service;
 
 import com.gachokaerick.eshop.basket.domain.BasketCheckout;
 import com.gachokaerick.eshop.basket.repository.BasketCheckoutRepository;
+import com.gachokaerick.eshop.basket.service.dto.BasketCheckoutDTO;
+import com.gachokaerick.eshop.basket.service.mapper.BasketCheckoutMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,91 +23,44 @@ public class BasketCheckoutService {
 
     private final BasketCheckoutRepository basketCheckoutRepository;
 
-    public BasketCheckoutService(BasketCheckoutRepository basketCheckoutRepository) {
+    private final BasketCheckoutMapper basketCheckoutMapper;
+
+    public BasketCheckoutService(BasketCheckoutRepository basketCheckoutRepository, BasketCheckoutMapper basketCheckoutMapper) {
         this.basketCheckoutRepository = basketCheckoutRepository;
+        this.basketCheckoutMapper = basketCheckoutMapper;
     }
 
     /**
      * Save a basketCheckout.
      *
-     * @param basketCheckout the entity to save.
+     * @param basketCheckoutDTO the entity to save.
      * @return the persisted entity.
      */
-    public BasketCheckout save(BasketCheckout basketCheckout) {
-        log.debug("Request to save BasketCheckout : {}", basketCheckout);
-        return basketCheckoutRepository.save(basketCheckout);
+    public BasketCheckoutDTO save(BasketCheckoutDTO basketCheckoutDTO) {
+        log.debug("Request to save BasketCheckout : {}", basketCheckoutDTO);
+        BasketCheckout basketCheckout = basketCheckoutMapper.toEntity(basketCheckoutDTO);
+        basketCheckout = basketCheckoutRepository.save(basketCheckout);
+        return basketCheckoutMapper.toDto(basketCheckout);
     }
 
     /**
      * Partially update a basketCheckout.
      *
-     * @param basketCheckout the entity to update partially.
+     * @param basketCheckoutDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<BasketCheckout> partialUpdate(BasketCheckout basketCheckout) {
-        log.debug("Request to partially update BasketCheckout : {}", basketCheckout);
+    public Optional<BasketCheckoutDTO> partialUpdate(BasketCheckoutDTO basketCheckoutDTO) {
+        log.debug("Request to partially update BasketCheckout : {}", basketCheckoutDTO);
 
         return basketCheckoutRepository
-            .findById(basketCheckout.getId())
+            .findById(basketCheckoutDTO.getId())
             .map(existingBasketCheckout -> {
-                if (basketCheckout.getStreet() != null) {
-                    existingBasketCheckout.setStreet(basketCheckout.getStreet());
-                }
-                if (basketCheckout.getCity() != null) {
-                    existingBasketCheckout.setCity(basketCheckout.getCity());
-                }
-                if (basketCheckout.getTown() != null) {
-                    existingBasketCheckout.setTown(basketCheckout.getTown());
-                }
-                if (basketCheckout.getCountry() != null) {
-                    existingBasketCheckout.setCountry(basketCheckout.getCountry());
-                }
-                if (basketCheckout.getZipcode() != null) {
-                    existingBasketCheckout.setZipcode(basketCheckout.getZipcode());
-                }
-                if (basketCheckout.getCreateTime() != null) {
-                    existingBasketCheckout.setCreateTime(basketCheckout.getCreateTime());
-                }
-                if (basketCheckout.getUpdateTime() != null) {
-                    existingBasketCheckout.setUpdateTime(basketCheckout.getUpdateTime());
-                }
-                if (basketCheckout.getPaymentStatus() != null) {
-                    existingBasketCheckout.setPaymentStatus(basketCheckout.getPaymentStatus());
-                }
-                if (basketCheckout.getPayerCountryCode() != null) {
-                    existingBasketCheckout.setPayerCountryCode(basketCheckout.getPayerCountryCode());
-                }
-                if (basketCheckout.getPayerEmail() != null) {
-                    existingBasketCheckout.setPayerEmail(basketCheckout.getPayerEmail());
-                }
-                if (basketCheckout.getPayerName() != null) {
-                    existingBasketCheckout.setPayerName(basketCheckout.getPayerName());
-                }
-                if (basketCheckout.getPayerSurname() != null) {
-                    existingBasketCheckout.setPayerSurname(basketCheckout.getPayerSurname());
-                }
-                if (basketCheckout.getPayerId() != null) {
-                    existingBasketCheckout.setPayerId(basketCheckout.getPayerId());
-                }
-                if (basketCheckout.getCurrency() != null) {
-                    existingBasketCheckout.setCurrency(basketCheckout.getCurrency());
-                }
-                if (basketCheckout.getAmount() != null) {
-                    existingBasketCheckout.setAmount(basketCheckout.getAmount());
-                }
-                if (basketCheckout.getPaymentId() != null) {
-                    existingBasketCheckout.setPaymentId(basketCheckout.getPaymentId());
-                }
-                if (basketCheckout.getUserLogin() != null) {
-                    existingBasketCheckout.setUserLogin(basketCheckout.getUserLogin());
-                }
-                if (basketCheckout.getDescription() != null) {
-                    existingBasketCheckout.setDescription(basketCheckout.getDescription());
-                }
+                basketCheckoutMapper.partialUpdate(existingBasketCheckout, basketCheckoutDTO);
 
                 return existingBasketCheckout;
             })
-            .map(basketCheckoutRepository::save);
+            .map(basketCheckoutRepository::save)
+            .map(basketCheckoutMapper::toDto);
     }
 
     /**
@@ -115,9 +70,9 @@ public class BasketCheckoutService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BasketCheckout> findAll(Pageable pageable) {
+    public Page<BasketCheckoutDTO> findAll(Pageable pageable) {
         log.debug("Request to get all BasketCheckouts");
-        return basketCheckoutRepository.findAll(pageable);
+        return basketCheckoutRepository.findAll(pageable).map(basketCheckoutMapper::toDto);
     }
 
     /**
@@ -127,9 +82,9 @@ public class BasketCheckoutService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BasketCheckout> findOne(Long id) {
+    public Optional<BasketCheckoutDTO> findOne(Long id) {
         log.debug("Request to get BasketCheckout : {}", id);
-        return basketCheckoutRepository.findById(id);
+        return basketCheckoutRepository.findById(id).map(basketCheckoutMapper::toDto);
     }
 
     /**

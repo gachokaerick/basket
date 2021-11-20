@@ -1,6 +1,5 @@
 package com.gachokaerick.eshop.basket.domain;
 
-import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import javax.validation.constraints.*;
 /**
  * @author Erick Gachoka
  */
-@ApiModel(description = "@author Erick Gachoka")
 @Entity
 @Table(name = "basket_item")
 public class BasketItem implements Serializable {

@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.gachokaerick.eshop.basket.IntegrationTest;
 import com.gachokaerick.eshop.basket.domain.BasketCheckout;
 import com.gachokaerick.eshop.basket.repository.BasketCheckoutRepository;
+import com.gachokaerick.eshop.basket.service.dto.BasketCheckoutDTO;
+import com.gachokaerick.eshop.basket.service.mapper.BasketCheckoutMapper;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -105,6 +107,9 @@ class BasketCheckoutResourceIT {
     private BasketCheckoutRepository basketCheckoutRepository;
 
     @Autowired
+    private BasketCheckoutMapper basketCheckoutMapper;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -180,12 +185,13 @@ class BasketCheckoutResourceIT {
     void createBasketCheckout() throws Exception {
         int databaseSizeBeforeCreate = basketCheckoutRepository.findAll().size();
         // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isCreated());
 
@@ -218,6 +224,7 @@ class BasketCheckoutResourceIT {
     void createBasketCheckoutWithExistingId() throws Exception {
         // Create the BasketCheckout with an existing ID
         basketCheckout.setId(1L);
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         int databaseSizeBeforeCreate = basketCheckoutRepository.findAll().size();
 
@@ -227,7 +234,7 @@ class BasketCheckoutResourceIT {
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -244,13 +251,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setCity(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -266,13 +274,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setTown(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -288,13 +297,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setCountry(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -310,13 +320,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setCreateTime(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -332,13 +343,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setUpdateTime(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -354,13 +366,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setPayerName(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -376,13 +389,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setPayerId(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -398,13 +412,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setCurrency(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -420,13 +435,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setAmount(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -442,13 +458,14 @@ class BasketCheckoutResourceIT {
         basketCheckout.setUserLogin(null);
 
         // Create the BasketCheckout, which fails.
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
                 post(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -558,13 +575,14 @@ class BasketCheckoutResourceIT {
             .paymentId(UPDATED_PAYMENT_ID)
             .userLogin(UPDATED_USER_LOGIN)
             .description(UPDATED_DESCRIPTION);
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(updatedBasketCheckout);
 
         restBasketCheckoutMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedBasketCheckout.getId())
+                put(ENTITY_API_URL_ID, basketCheckoutDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedBasketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isOk());
 
@@ -598,13 +616,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, basketCheckout.getId())
+                put(ENTITY_API_URL_ID, basketCheckoutDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -619,13 +640,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -640,13 +664,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
                 put(ENTITY_API_URL)
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 
@@ -782,13 +809,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, basketCheckout.getId())
+                patch(ENTITY_API_URL_ID, basketCheckoutDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -803,13 +833,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -824,13 +857,16 @@ class BasketCheckoutResourceIT {
         int databaseSizeBeforeUpdate = basketCheckoutRepository.findAll().size();
         basketCheckout.setId(count.incrementAndGet());
 
+        // Create the BasketCheckout
+        BasketCheckoutDTO basketCheckoutDTO = basketCheckoutMapper.toDto(basketCheckout);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restBasketCheckoutMockMvc
             .perform(
                 patch(ENTITY_API_URL)
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(basketCheckout))
+                    .content(TestUtil.convertObjectToJsonBytes(basketCheckoutDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

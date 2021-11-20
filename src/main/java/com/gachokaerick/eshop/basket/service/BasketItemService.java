@@ -2,6 +2,8 @@ package com.gachokaerick.eshop.basket.service;
 
 import com.gachokaerick.eshop.basket.domain.BasketItem;
 import com.gachokaerick.eshop.basket.repository.BasketItemRepository;
+import com.gachokaerick.eshop.basket.service.dto.BasketItemDTO;
+import com.gachokaerick.eshop.basket.service.mapper.BasketItemMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,58 +23,44 @@ public class BasketItemService {
 
     private final BasketItemRepository basketItemRepository;
 
-    public BasketItemService(BasketItemRepository basketItemRepository) {
+    private final BasketItemMapper basketItemMapper;
+
+    public BasketItemService(BasketItemRepository basketItemRepository, BasketItemMapper basketItemMapper) {
         this.basketItemRepository = basketItemRepository;
+        this.basketItemMapper = basketItemMapper;
     }
 
     /**
      * Save a basketItem.
      *
-     * @param basketItem the entity to save.
+     * @param basketItemDTO the entity to save.
      * @return the persisted entity.
      */
-    public BasketItem save(BasketItem basketItem) {
-        log.debug("Request to save BasketItem : {}", basketItem);
-        return basketItemRepository.save(basketItem);
+    public BasketItemDTO save(BasketItemDTO basketItemDTO) {
+        log.debug("Request to save BasketItem : {}", basketItemDTO);
+        BasketItem basketItem = basketItemMapper.toEntity(basketItemDTO);
+        basketItem = basketItemRepository.save(basketItem);
+        return basketItemMapper.toDto(basketItem);
     }
 
     /**
      * Partially update a basketItem.
      *
-     * @param basketItem the entity to update partially.
+     * @param basketItemDTO the entity to update partially.
      * @return the persisted entity.
      */
-    public Optional<BasketItem> partialUpdate(BasketItem basketItem) {
-        log.debug("Request to partially update BasketItem : {}", basketItem);
+    public Optional<BasketItemDTO> partialUpdate(BasketItemDTO basketItemDTO) {
+        log.debug("Request to partially update BasketItem : {}", basketItemDTO);
 
         return basketItemRepository
-            .findById(basketItem.getId())
+            .findById(basketItemDTO.getId())
             .map(existingBasketItem -> {
-                if (basketItem.getProductId() != null) {
-                    existingBasketItem.setProductId(basketItem.getProductId());
-                }
-                if (basketItem.getProductName() != null) {
-                    existingBasketItem.setProductName(basketItem.getProductName());
-                }
-                if (basketItem.getUnitPrice() != null) {
-                    existingBasketItem.setUnitPrice(basketItem.getUnitPrice());
-                }
-                if (basketItem.getOldUnitPrice() != null) {
-                    existingBasketItem.setOldUnitPrice(basketItem.getOldUnitPrice());
-                }
-                if (basketItem.getQuantity() != null) {
-                    existingBasketItem.setQuantity(basketItem.getQuantity());
-                }
-                if (basketItem.getPictureUrl() != null) {
-                    existingBasketItem.setPictureUrl(basketItem.getPictureUrl());
-                }
-                if (basketItem.getUserLogin() != null) {
-                    existingBasketItem.setUserLogin(basketItem.getUserLogin());
-                }
+                basketItemMapper.partialUpdate(existingBasketItem, basketItemDTO);
 
                 return existingBasketItem;
             })
-            .map(basketItemRepository::save);
+            .map(basketItemRepository::save)
+            .map(basketItemMapper::toDto);
     }
 
     /**
@@ -82,9 +70,9 @@ public class BasketItemService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<BasketItem> findAll(Pageable pageable) {
+    public Page<BasketItemDTO> findAll(Pageable pageable) {
         log.debug("Request to get all BasketItems");
-        return basketItemRepository.findAll(pageable);
+        return basketItemRepository.findAll(pageable).map(basketItemMapper::toDto);
     }
 
     /**
@@ -94,9 +82,9 @@ public class BasketItemService {
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<BasketItem> findOne(Long id) {
+    public Optional<BasketItemDTO> findOne(Long id) {
         log.debug("Request to get BasketItem : {}", id);
-        return basketItemRepository.findById(id);
+        return basketItemRepository.findById(id).map(basketItemMapper::toDto);
     }
 
     /**

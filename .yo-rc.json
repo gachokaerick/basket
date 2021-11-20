@@ -30,7 +30,7 @@
     "dtoSuffix": "DTO",
     "entitySuffix": "",
     "reactive": false,
-    "applicationIndex": 0,
+    "applicationIndex": 3,
     "skipServer": false,
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
@@ -45,6 +45,7 @@
     "creationTimestamp": 1637286712939,
     "jwtSecretKey": "NTFhZWUxOWZiYzMwOGRlZGFmNTE1MWM0MmEyZDcxMmY3NTJjZWQ0Y2EzZTg2Zjg2OTQ5N2Q4OTBiYmQ3NTUyNzhhNDg5ZjNkYjlkZTMyMjc0ODNjNWRmYWY5ODI3MjI5NWRkMjcwYWUxZTljZDgzNmI0NDM2NTA5NWVmZGFmNTQ=",
     "entities": ["BasketItem", "BasketCheckout"],
-    "lastLiquibaseTimestamp": 1637286832000
+    "lastLiquibaseTimestamp": 1637286832000,
+    "gatewayServerPort": "8080"
   }
 }
